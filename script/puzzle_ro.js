@@ -286,12 +286,6 @@
     });
   })();
 
-  function formatSeconds(sec){
-    if (!sec || sec <= 0) return '00:00';
-    const m = Math.floor(sec/60); const s = sec%60;
-    return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  }
-
   function renderBestTimes() {
     const key = getStorageKey();
     const v = localStorage.getItem(key);
@@ -305,7 +299,8 @@
 
     try {
       const data = JSON.parse(v);
-      if(!data.time || data.time <= 0) {
+
+      if (data.time == null || isNaN(data.time) || data.moves == null) {
         bestTimeValueEl.textContent = '';
         bestMovesValueEl.textContent = '';
         bestTimeContainer.style.display = 'none';
@@ -313,13 +308,20 @@
       }
       
       bestTimeValueEl.textContent = formatSeconds(data.time);
-      bestMovesValueEl.textContent = data.moves || '?';
+      bestMovesValueEl.textContent = data.moves.toString();
       bestTimeContainer.style.display = '';
     } catch {
       bestTimeValueEl.textContent = '';
       bestMovesValueEl.textContent = '';
       bestTimeContainer.style.display = 'none';
     }
+  }
+
+  function formatSeconds(sec) {
+    if (sec == null || isNaN(sec) || sec < 0) return '00:00';
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
   }
 
   const previewBtn = document.getElementById('previewBtn');
