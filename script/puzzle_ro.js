@@ -128,17 +128,15 @@
     secondsElapsed = 0;
     moves = 0;
 
-    updateTimerDisplay();
+    timerEl.textContent = '';
     movesEl.textContent = '';
+
+    movesContainer.style.display = 'none';
+    timerContainer.style.dispaly = 'none';
 
     imgSrc = imageSelect.value;
 
     const key = getStorageKey(size, imageSelect.selectedIndex);
-    const best = localStorage.getItem(key);
-
-    movesContainer.style.display = '';
-    timerContainer.style.display = '';
-    timerEl.textContent = '00:00'
 
     preloadImage(imgSrc).then(url => {
       createGrid(size, url);
