@@ -6,10 +6,15 @@
   const resetBtn = document.getElementById('resetBtn');
   const movesEl = document.getElementById('moves');
   const timerEl = document.getElementById('timer');
+  const movesContainer = document.getElementById('movesContainer');
+  const timerContainer = document.getElementById('timerContainer');
   const settingsBtn = document.getElementById('setari');
   const settingsPop = document.getElementById('settingsPopover');
   const levelLabel = document.getElementById('levelLabel');
   const imageLabel = document.getElementById('imageLabel');
+  const bestTimeValueEl = document.getElementById('bestTimeValue');
+  const bestMovesValueEl = document.getElementById('bestMovesValue');
+  const bestTimeContainer = document.getElementById('bestTimeContainer');
 
   let size = Number(levelSelect.value || 3);
   let imgSrc = imageSelect.value;
@@ -21,6 +26,12 @@
   let secondsElapsed = 0;
   const bestTimesEl = document.getElementById('bestTimes');
 
+  function getStorageKey() {
+    const level = size;
+    const imageIndex = imageSelect.selectedIndex + 1;
+    return `puzzle_best_${level}_${imageIndex}`;
+  }
+  
   function createGrid(n, imageUrl){
     puzzleEl.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
     puzzleEl.innerHTML = '';
@@ -77,7 +88,6 @@
       return;
     }
 
-    // start timer on first actual move
     if (!timerInterval) startTimerIfNeeded();
 
     const i1 = Array.prototype.indexOf.call(tiles, selected);
@@ -95,33 +105,45 @@
     const solved = order.every((v,i)=>v===i);
     if(solved){
       stopTimer();
-      const level = size;
-      const key = `puzzle_best_${level}`;
+
+      tiles.forEach(tile => tile.removeEventListener('click', onPieceClick));
+
+      const key = `puzzle_best_${size}_${imageSelect.value}`;
       const prev = localStorage.getItem(key);
       let prevObj = prev ? JSON.parse(prev) : null;
-      if (
-        secondsElapsed > 0 &&
-        (!prevObj || secondsElapsed < prevObj.time)
-      ) {
+
+      if (secondsElapsed > 0 && (!prevObj || secondsElapsed < prevObj.time)) {
         localStorage.setItem(key, JSON.stringify({
           time: secondsElapsed,
           moves: moves
         }));
       }
+      
       renderBestTimes();
+
       setTimeout(()=> alert(`Felicitări! Ai rezolvat puzzle-ul în ${moves} mutări și ${formatSeconds(secondsElapsed)}.`), 100);
     }
   }
 
-  // startGame removed; gameplay now starts when user makes first move (timer starts on first move)
-
   function resetGame(){
     stopTimer();
     secondsElapsed = 0;
+    moves = 0;
+
     updateTimerDisplay();
-    moves = 0; movesEl.textContent = moves;
+    movesEl.textContent = '';
+
     imgSrc = imageSelect.value;
-    // Create a new shuffled board on reset
+
+    const key = `puzzle_best_${size}`;
+    const best = localStorage.getItem(key);
+
+    if(!best) {
+      movesContainer.style.display = '';
+      timerContainer.style.display = '';
+      timerEl.textContent = '00:00'
+    }
+
     preloadImage(imgSrc).then(url => {
       createGrid(size, url);
       do { shuffle(); } while(order.every((v,i)=>v===i));
@@ -131,21 +153,21 @@
       do { shuffle(); } while(order.every((v,i)=>v===i));
       renderBestTimes();
     });
-    updateTimerDisplay();
-    movesEl.textContent = '';
   }
 
   function preloadImage(src){
     return new Promise((resolve, reject)=>{
       const img = new Image();
       img.onload = () => resolve(src);
-      img.onerror = () => reject(new Error('Image load error'));
+      img.onerror = () => reject(new Error('Nu s-a putut încarca imaginea!'));
       img.src = src;
     });
   }
 
   function startTimerIfNeeded(){
     if (timerInterval) return;
+    movesContainer.style.display = '';
+    timerContainer.style.display = '';
     timerInterval = setInterval(()=>{
       secondsElapsed++;
       updateTimerDisplay();
@@ -163,12 +185,15 @@
     timerEl.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
   }
   resetBtn.addEventListener('click', resetGame);
-  // when level selection changes, apply it immediately (rebuild + shuffle)
+
   function applyLevelImmediate(){
     size = Number(levelSelect.value);
     imgSrc = imageSelect.value;
     moves = 0; movesEl.textContent = '';
-    // create shuffled grid for new level (do not auto-start timer)
+    
+    movesContainer.style.display = 'none';
+    timerContainer.style.display = 'none';
+
     preloadImage(imgSrc).then(url => {
       createGrid(size, url);
       do { shuffle(); } while(order.every((v,i)=>v===i));
@@ -176,15 +201,13 @@
       createGrid(size, imgSrc);
       do { shuffle(); } while(order.every((v,i)=>v===i));
     });
-    // reset timer display; Start button still starts timer for level 4
-    timerEl.textContent = '—';
+    
     stopTimer();
     renderBestTimes();
   }
 
   levelSelect.addEventListener('change', applyLevelImmediate);
 
-  // sync labels in the compact controls
   function updateLabels(){
     const li = levelSelect.options[levelSelect.selectedIndex].text;
     const ii = imageSelect.options[imageSelect.selectedIndex].text;
@@ -222,7 +245,6 @@
     });
   }
 
-  // segmented groups handling
   const levelGroup = document.getElementById('levelGroup');
   const imageGroup = document.getElementById('imageGroup');
   function setActiveButton(group, btn){
@@ -250,7 +272,6 @@
     });
   }
 
-  // create initial grid with preloaded image so tiles show immediately (shuffled)
   (function init(){
     const initialSrc = imageSelect.value;
     preloadImage(initialSrc).then(url => {
@@ -273,27 +294,27 @@
   }
 
   function renderBestTimes() {
-    if (!bestTimesEl) return;
-    const key = `puzzle_best_${size}`;
+    const key = `puzzle_best_${size}_${imageSelect.value}`;
     const v = localStorage.getItem(key);
+
     if (!v) {
-      // 🔹 Nu afișăm nimic când nu există record
       bestTimesEl.textContent = '';
+      bestMovesValueEl.textContent = '';
+      bestTimeContainer.style.display = 'none';
       return;
     }
+
     try {
       const data = JSON.parse(v);
       const t = formatSeconds(data.time);
       const m = data.moves || '?';
-      bestTimesEl.textContent = `Best: ${t} and ${m} moves`;
+      bestTimeValueEl.textContent = t;
+      bestMovesValueEl.textContent = m;
+      bestTimeContainer.style.display = '';
     } catch {
-      bestTimesEl.textContent = '';
+      bestTimeValueEl.textContent = '';
+      bestMovesValueEl.textContent = '';
     }
   }
 
 })();
-
-// timpul trebuie resetata la 1 minut
-// sa se blockeze sa nu mai poti face mutari dupa ce ai terminat puzzleul
-// trebuie implementata un sistsem de mutari la Best Time
-// sound pentru puzzle

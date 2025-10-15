@@ -33,7 +33,7 @@
                                 <button data-value="5">5×5</button>
                             </div>
                             <select id="levelSelect" aria-hidden="true" style="display:none">
-                                <option value="2">Usor</option>
+                                <option value="2">Ușor</option>
                                 <option value="3" selected>Normal</option>
                                 <option value="4">Greu</option>
                                 <option value="5">Incredibil</option>
@@ -62,12 +62,16 @@
                     </div>
 
                     <div class="puzzle-controls">
-                        <div class="stat-inline">Nivel: <span id="levelLabel">Nivel 2 — Normal (3×3)</span></div>
-                        <div class="stat-inline">Imagine: <span id="imageLabel">Implicită</span></div>
-                        <div class="stat-inline">Mutări: <strong id="moves"></strong></div>
-                        <div class="stat-inline">Timp: <strong id="timer"></strong></div>
-                        <div class="stat-inline" id="bestTimeContainer">
-                            <span id="bestTimes" style="margin-left: 8px; color:var(--muted)"></span>
+                        <div class="stat-inline">Nivel: <span id="levelLabel" class="value">Ușor</span></div>
+                        <div class="stat-inline">Imagine: <span id="imageLabel" class="value">1</span></div>
+                        <div class="stat-inline" id="movesContainer" style="display:none;">
+                            <span>Mutări: </span><span id="moves" class="value"></span>
+                        </div>
+                        <div class="stat-inline" id="timerContainer" style="display:none;">
+                            <span>Timp: </span><span id="timer" class="value"></span>
+                        </div>
+                        <div class="stat-inline" id="bestTimeContainer" style="display:none;">
+                            Record: <strong id="bestTimeValue"></strong> și <strong id="bestMovesValue"></strong> mutări
                         </div>
                     </div>
 
@@ -76,8 +80,7 @@
                 </div>
 
                 <div class="puzzle-instructions">
-                    <p>Click pe o piesă, apoi pe alta pentru a le schimba. Obiectiv: reconstitui imaginea.
-                    Nivelul 4 are un cronometru (10 minute). Când rezolvi, apare un mesaj.</p>
+                    <p>Click pe o piesă, apoi pe alta pentru a le schimba. Obiectiv: reconstitui imaginea.</p>
                 </div>
             </div>
         </div>

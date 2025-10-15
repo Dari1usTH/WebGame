@@ -14,9 +14,12 @@
 
 @media (max-width:520px){ .puzzle{ max-width:100%; padding:8px; gap:4px; } }
 
-/* segmented buttons like Flappy settings */
 .segmented{ display:inline-flex; gap:8px; background: rgba(255,255,255,0.02); padding:6px; border-radius:999px; border:1px solid rgba(255,255,255,0.06); align-items:center; }
 .segmented button{ appearance:none; -webkit-appearance:none; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.04); color:var(--fg); padding:6px 12px; border-radius:10px; cursor:pointer; font-weight:700; font-size:13px; line-height:1; }
 .segmented button:hover{ background: rgba(255,255,255,0.05); }
 .segmented button.active{ background: linear-gradient(180deg, #7aa2ff, #5a82ff); color: white; border-color: rgba(90,130,255,0.8); box-shadow: 0 8px 20px rgba(90,130,255,0.12); }
 .segmented button:focus{ outline:2px solid rgba(122,162,255,.25); outline-offset:2px; }
+
+.value {
+    font-weight: bold;
+}
