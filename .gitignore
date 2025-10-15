@@ -1,9 +1,0 @@
-
-node_modules/
-
-*.log
-*.tmp
-
-.env
-.gitignorecopy.js
-.gitignoretodo.txt
