@@ -322,4 +322,24 @@
     }
   }
 
+  const previewBtn = document.getElementById('previewBtn');
+  let previewActive = false;
+  let previewEl = null;
+
+  previewBtn.addEventListener('click', () => {
+    const puzzleWrap = document.getElementById('puzzleWrap');
+    if (!previewActive) {
+      previewEl = document.createElement('div');
+      previewEl.className = 'preview-overlay';
+      previewEl.style.backgroundImage = `url(${imgSrc})`;
+      puzzleEl.appendChild(previewEl);
+      previewActive = true;
+    } else {
+      if (previewEl) {
+        previewEl.remove();
+      }
+      previewActive = false;
+      previewEl = null;
+    }
+  })
 })();
