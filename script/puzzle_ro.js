@@ -95,13 +95,18 @@
     const solved = order.every((v,i)=>v===i);
     if(solved){
       stopTimer();
-      // save best time per level
       const level = size;
       const key = `puzzle_best_${level}`;
       const prev = localStorage.getItem(key);
-      const prevSec = prev ? Number(prev) : null;
-      if (secondsElapsed > 0 && (prevSec === null || secondsElapsed < prevSec)){
-        localStorage.setItem(key, String(secondsElapsed));
+      let prevObj = prev ? JSON.parse(prev) : null;
+      if (
+        secondsElapsed > 0 &&
+        (!prevObj || secondsElapsed < prevObj.time)
+      ) {
+        localStorage.setItem(key, JSON.stringify({
+          time: secondsElapsed,
+          moves: moves
+        }));
       }
       renderBestTimes();
       setTimeout(()=> alert(`Felicitări! Ai rezolvat puzzle-ul în ${moves} mutări și ${formatSeconds(secondsElapsed)}.`), 100);
@@ -126,6 +131,8 @@
       do { shuffle(); } while(order.every((v,i)=>v===i));
       renderBestTimes();
     });
+    updateTimerDisplay();
+    movesEl.textContent = '';
   }
 
   function preloadImage(src){
@@ -145,14 +152,22 @@
     }, 1000);
   }
   function stopTimer(){ if(timerInterval){ clearInterval(timerInterval); timerInterval = null; } }
-  function updateTimerDisplay(){ if(secondsElapsed<=0){ timerEl.textContent = '00:00'; return; } const m = Math.floor(secondsElapsed/60); const s = secondsElapsed%60; timerEl.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }
 
+  function updateTimerDisplay(){
+    if (secondsElapsed <= 0) {
+      timerEl.textContent = '';
+      return;
+    }
+    const m = Math.floor(secondsElapsed / 60);
+    const s = secondsElapsed % 60;
+    timerEl.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  }
   resetBtn.addEventListener('click', resetGame);
   // when level selection changes, apply it immediately (rebuild + shuffle)
   function applyLevelImmediate(){
     size = Number(levelSelect.value);
     imgSrc = imageSelect.value;
-    moves = 0; movesEl.textContent = moves;
+    moves = 0; movesEl.textContent = '';
     // create shuffled grid for new level (do not auto-start timer)
     preloadImage(imgSrc).then(url => {
       createGrid(size, url);
@@ -257,12 +272,23 @@
     return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
   }
 
-  function renderBestTimes(){
-    if(!bestTimesEl) return;
+  function renderBestTimes() {
+    if (!bestTimesEl) return;
     const key = `puzzle_best_${size}`;
     const v = localStorage.getItem(key);
-    // show only the formatted best time for the selected level
-    bestTimesEl.textContent = v ? formatSeconds(Number(v)) : '-';
+    if (!v) {
+      // 🔹 Nu afișăm nimic când nu există record
+      bestTimesEl.textContent = '';
+      return;
+    }
+    try {
+      const data = JSON.parse(v);
+      const t = formatSeconds(data.time);
+      const m = data.moves || '?';
+      bestTimesEl.textContent = `Best: ${t} and ${m} moves`;
+    } catch {
+      bestTimesEl.textContent = '';
+    }
   }
 
 })();
