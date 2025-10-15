@@ -26,9 +26,7 @@
   let secondsElapsed = 0;
   const bestTimesEl = document.getElementById('bestTimes');
 
-  function getStorageKey() {
-    const level = size;
-    const imageIndex = imageSelect.selectedIndex + 1;
+  function getStorageKey(level = size, imageIndex = imageSelect.selectedIndex) {
     return `puzzle_best_${level}_${imageIndex}`;
   }
   
@@ -108,17 +106,17 @@
 
       tiles.forEach(tile => tile.removeEventListener('click', onPieceClick));
 
-      const key = `puzzle_best_${size}_${imageSelect.value}`;
+      const key = getStorageKey(size, imageSelect.selectedIndex);
       const prev = localStorage.getItem(key);
       let prevObj = prev ? JSON.parse(prev) : null;
 
-      if (secondsElapsed > 0 && (!prevObj || secondsElapsed < prevObj.time)) {
+      if ((!prevObj || secondsElapsed < prevObj.time)) {
         localStorage.setItem(key, JSON.stringify({
           time: secondsElapsed,
           moves: moves
         }));
       }
-      
+
       renderBestTimes();
 
       setTimeout(()=> alert(`Felicitări! Ai rezolvat puzzle-ul în ${moves} mutări și ${formatSeconds(secondsElapsed)}.`), 100);
@@ -135,14 +133,12 @@
 
     imgSrc = imageSelect.value;
 
-    const key = `puzzle_best_${size}`;
+    const key = getStorageKey(size, imageSelect.selectedIndex);
     const best = localStorage.getItem(key);
 
-    if(!best) {
-      movesContainer.style.display = '';
-      timerContainer.style.display = '';
-      timerEl.textContent = '00:00'
-    }
+    movesContainer.style.display = '';
+    timerContainer.style.display = '';
+    timerEl.textContent = '00:00'
 
     preloadImage(imgSrc).then(url => {
       createGrid(size, url);
@@ -189,7 +185,12 @@
   function applyLevelImmediate(){
     size = Number(levelSelect.value);
     imgSrc = imageSelect.value;
-    moves = 0; movesEl.textContent = '';
+    moves = 0; 
+    movesEl.textContent = '';
+
+    bestTimeValueEl.textContent = '';
+    bestMovesValueEl.textContent = '';
+    bestTimeContainer.style.display = 'none';
     
     movesContainer.style.display = 'none';
     timerContainer.style.display = 'none';
@@ -197,13 +198,13 @@
     preloadImage(imgSrc).then(url => {
       createGrid(size, url);
       do { shuffle(); } while(order.every((v,i)=>v===i));
+      renderBestTimes();
     }).catch(()=>{
       createGrid(size, imgSrc);
       do { shuffle(); } while(order.every((v,i)=>v===i));
     });
     
     stopTimer();
-    renderBestTimes();
   }
 
   levelSelect.addEventListener('change', applyLevelImmediate);
@@ -294,7 +295,7 @@
   }
 
   function renderBestTimes() {
-    const key = `puzzle_best_${size}_${imageSelect.value}`;
+    const key = getStorageKey();
     const v = localStorage.getItem(key);
 
     if (!v) {
@@ -306,14 +307,20 @@
 
     try {
       const data = JSON.parse(v);
-      const t = formatSeconds(data.time);
-      const m = data.moves || '?';
-      bestTimeValueEl.textContent = t;
-      bestMovesValueEl.textContent = m;
+      if(!data.time || data.time <= 0) {
+        bestTimeValueEl.textContent = '';
+        bestMovesValueEl.textContent = '';
+        bestTimeContainer.style.display = 'none';
+        return;
+      }
+      
+      bestTimeValueEl.textContent = formatSeconds(data.time);
+      bestMovesValueEl.textContent = data.moves || '?';
       bestTimeContainer.style.display = '';
     } catch {
       bestTimeValueEl.textContent = '';
       bestMovesValueEl.textContent = '';
+      bestTimeContainer.style.display = 'none';
     }
   }
 
