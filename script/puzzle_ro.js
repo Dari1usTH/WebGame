@@ -147,6 +147,13 @@
       do { shuffle(); } while(order.every((v,i)=>v===i));
       renderBestTimes();
     });
+
+    previewActive = false;
+    previewBtn.textContent = 'Previzualizare';
+    if (previewEl) {
+      previewEl.remove();
+      previewEl = null;
+    }
   }
 
   function preloadImage(src){
@@ -203,6 +210,13 @@
     });
     
     stopTimer();
+
+    previewActive = false;
+    previewBtn.textContent = 'Previzualizare';
+    if (previewEl) {
+      previewEl.remove();
+      previewEl = null;
+    }
   }
 
   levelSelect.addEventListener('change', applyLevelImmediate);
@@ -336,12 +350,14 @@
       previewEl.style.backgroundImage = `url(${imgSrc})`;
       puzzleEl.appendChild(previewEl);
       previewActive = true;
+      previewBtn.textContent = 'Puzzle';
     } else {
       if (previewEl) {
         previewEl.remove();
       }
       previewActive = false;
       previewEl = null;
+      previewBtn.textContent = 'Previzualizare';
     }
   })
 })();
