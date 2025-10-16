@@ -30,28 +30,31 @@
     return `puzzle_best_${level}_${imageIndex}`;
   }
   
-  function createGrid(n, imageUrl){
+  function createGrid(n, imageUrl) {
     puzzleEl.style.gridTemplateColumns = `repeat(${n}, 1fr)`;
     puzzleEl.innerHTML = '';
     tiles = [];
-    order = Array.from({length: n*n}, (_,i)=>i);
+    order = Array.from({ length: n * n }, (_, i) => i);
 
-    for(let r=0;r<n;r++){
-      for(let c=0;c<n;c++){
-        const idx = r*n + c;
+    for (let r = 0; r < n; r++) {
+      for (let c = 0; c < n; c++) {
+        const idx = r * n + c;
         const div = document.createElement('div');
+        
         div.className = 'piece';
         div.dataset.index = idx;
-  div.style.backgroundImage = imageUrl ? `url(${imageUrl})` : 'none';
-  if (!imageUrl) div.style.backgroundColor = '#15183a';
-        div.style.backgroundSize = `${n*100}% ${n*100}%`;
-        div.style.backgroundPosition = `${(c/(n-1))*100}% ${(r/(n-1))*100}%`;
+        div.style.backgroundImage = imageUrl ? `url(${imageUrl})` : 'none';
+        if (!imageUrl) div.style.backgroundColor = '#15183a';
+        div.style.backgroundSize = `${n * 100}% ${n * 100}%`;
+        div.style.backgroundPosition = `${(c / (n - 1)) * 100}% ${(r / (n - 1)) * 100}%`;
+        
         div.addEventListener('click', onPieceClick);
         puzzleEl.appendChild(div);
         tiles.push(div);
       }
     }
   }
+
 
   function shuffle(){
     for(let i=order.length-1;i>0;i--){
