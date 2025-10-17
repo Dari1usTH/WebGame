@@ -99,5 +99,204 @@
         checkSolved();
     }
 
+    function checkSolved() {
+        const solved = order.every((v,i)=>v===i);
+        if(solved){
+            stopTimer();
+            
+            tiles.forEach(tile => tile.removeEventListener('click',onPieceClick));
 
-})
+            const key = getStorageKey(size, imageSelect.selectedIndex);
+            const prev = localStorage.getItem(key);
+            let prevObj = prev ? JSON.parse(prev) : null;
+
+            if((!prevObj || secondsElapsed < prevObj.time)) {
+                localStorage.setItem(key, JSON.stringify({
+                    time: secondsElapsed,
+                    moves: moves
+                }));
+            }
+
+            renderBestTime();
+
+            setTimeout(()=> alert(`Congratulations! You have solved the puzzle in ${moves} moves and ${formatSeconds(secondsElapsed)}.`), 100);
+        }
+    }
+
+    function resetGame(){
+        stopTimer();
+        secondsElapsed = 0;
+        moves = 0;
+
+        timerEl.textContent = '';
+        movesEl.textContent = '';
+
+        movesContainer.style.display = 'none';
+        timerContainer.style.dispaly = 'none';
+
+        imgSrc = imageSelect.value;
+
+        preloadImage(imgSrc).then(url => {
+            createGrid(size, url);
+            do { suffle(); }while(order.every((v,i) => v===i));
+            renderBestTimes();
+        }).catch(()=>{
+            createGrid(size, imgSrc);
+            do { shuffle(); } while(order.every((v,i)=>v===i));
+            renderBestTimes();
+        });
+
+        previewActive = false;
+        previewBtn.textContent = "Preview";
+        if (previewEl) {
+            previewEl.remove();
+            previewEl = null;
+        }
+    }
+
+    function preloadImage(src) {
+        return new Promise((resolve, reject)=>{
+            const img = new Image();
+            img.onload = () => resolve(src);
+            img.onerror = () => reject(new Error('Cannot load image!'));
+            img.src = src;
+        })
+    }
+
+    function startTimerIfNeeded(src){
+        if (timerInterval) return;
+        movesContainer.style.display = '';
+        timerContainer.style.dispaly = '';
+        timerInterval = setInterval(()=>{
+            secondsElapsed++;
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    function stopTimer(){ if(timerInterval){ clearInterval(timerInterval); timerInterval = null; } }
+
+    function updateTimerDisplay() {
+        if (secondsElapsed <= 0) {
+            timerEl.textContent = '';
+            return;
+        }
+        const m = Math.floor(secondsElapsed / 60);
+        const s = secondsElapsed % 60;
+        timerEl.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+    resetBtn.addEventListener('click', resetGame);
+
+    function applyLevelImmediate(){
+        size = Number(levelSelect.value);
+        imgSrc = imageSelect.value;
+        moves = 0;
+        movesEl.textContent = '';
+
+        bestTimeValueEl.textContent = '';
+        bestMovesValueEl.textContent = '';
+        bestTimerContainer.style.display = 'none';
+
+        movesContainer.style.dispaly = 'none';
+        timerContainer.style.dispaly = 'none';
+
+        preloadImage(imgSrc).then(url => {
+            createGrid(size, url);
+            do { shuffle(); } while(order.every((v,i)=>v===i));
+            renderBestTimes();
+        }).catch(()=>{
+            createGrid(size, imgSrc);
+            do { shuffle(); } while(order.every((v,i)=>v===i))''
+        });
+
+        stopTimer();
+
+        previewActive = false;
+        previewBtn.textContent = 'Preview';
+        if (previewEl) {
+            previewEl.remove();
+            previewEl = null;
+        }
+    }
+
+    levelSelect.addEventListener('change', applyLevelImmediate);
+
+    function updateLabels(){
+        const li = levelSelect.options[levelSelect.selectedIndex].text;
+        const ii = imageSelect.options[imageSelect.selectedIndex].text;
+        if(levelLabel) levelLabel.textContent = li;
+        if(imageLabel) imageLabel.textContent = ii;
+    }
+    updateLabels();
+    imageSelect.addEventListener('change', ()=>{ updateLabels(); applyLevelImmediate(); });
+
+    if (settingsBtn && settingsPop) {
+        settingsBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const open = settingsPop.getAttribute('data-open') === 'true';
+            settingsPop.setAttribute('data-open', opeb ? 'false' : 'true');
+            settingsBtn.setAttribute('aria-expanded', open ? 'false' : 'true');
+            settingsPop.setAttribute('aria-hidden', open ? 'true' : 'false');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (settingsPop.getAttribute('data-open') !== 'true') return;
+            const clickedInside = settingsPop.contains(e.target) || settingsBtn.contains(e.target);
+            if(!clickedInside) {
+                settingsPop.setAttribute('data-open', 'false');
+                settingsBtn.setAttribute('aria-expanded', 'false');
+                settingsPop.setattribute('aria-hidden', 'true');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && settingsPop.getAttribute('data-open') === 'true') {
+                settingsPop.setAttribute('data-open', 'false');
+                settingsBtn.setAttribute('aria-expanded', 'false');
+                settingsPop.setAttribute('aria-hidden', 'true');
+            }
+        });
+    }
+
+    const levelGroup = document.getElementById('levelGroup')
+    const imageGroup = document.getElementById('imageGroup');
+
+    function setActiveButton(group, btn){
+        group.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+    }
+    if(levelGroup){
+        levelGroup.addEventListener('click', (e)=>{
+            const b = e.target.closest('button'); if(!b) return;
+            const val = b.dataset.value;
+            setActiveButton(levelGroup, b);
+            levelSelect.value = val;
+            updateLabels();
+            applyLevelImmediate();
+        });
+    }
+    if(imageGroup){
+        imageGroup.addEventListener('click', (e)=>{
+            const b = e.target.closest('button'); if(!b) return;
+            const val = b.dataset.value;
+            setActiveButton(imageGroup, b);
+            imageSelect.value = val;
+            updateLabels();
+            applyLevelImmediate();
+        });
+    }
+
+    (function init(){
+        const initialSrc = imageSelect.value;
+        preloadImage(initialSrc).then(url => {
+            createGrid(size, url);
+            do { shuffle(); } while(order.every((v,i)=>v===i));
+            renderBestTimes();
+            updateTimerDisplay;
+        }).catch(()=>{
+            createGrid(size, initialSrc);
+            do { shuffle(); } while(order.every((v,i)=>v===i));
+            renderBestTimes();
+            updateTimerDisplay();
+        });
+    });  
+})();

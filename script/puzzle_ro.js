@@ -55,7 +55,6 @@
     }
   }
 
-
   function shuffle(){
     for(let i=order.length-1;i>0;i--){
       const j = Math.floor(Math.random()*(i+1));
@@ -177,6 +176,7 @@
       updateTimerDisplay();
     }, 1000);
   }
+
   function stopTimer(){ if(timerInterval){ clearInterval(timerInterval); timerInterval = null; } }
 
   function updateTimerDisplay(){
@@ -188,6 +188,7 @@
     const s = secondsElapsed % 60;
     timerEl.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
   }
+
   resetBtn.addEventListener('click', resetGame);
 
   function applyLevelImmediate(){
@@ -263,10 +264,12 @@
 
   const levelGroup = document.getElementById('levelGroup');
   const imageGroup = document.getElementById('imageGroup');
+
   function setActiveButton(group, btn){
     group.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
   }
+
   if(levelGroup){
     levelGroup.addEventListener('click', (e)=>{
       const b = e.target.closest('button'); if(!b) return;
@@ -277,6 +280,7 @@
       applyLevelImmediate();
     });
   }
+  
   if(imageGroup){
     imageGroup.addEventListener('click', (e)=>{
       const b = e.target.closest('button'); if(!b) return;
