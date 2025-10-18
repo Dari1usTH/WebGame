@@ -93,6 +93,10 @@
     const i1 = Array.prototype.indexOf.call(tiles, selected);
     const i2 = Array.prototype.indexOf.call(tiles, el);
     [order[i1], order[i2]] = [order[i2], order[i1]];
+
+    const moveSound = new Audio('../sounds/puzzle/puzzle_move1.mp3');
+    moveSound.play();
+
     selected.classList.remove('selected');
     selected = null;
     moves++;
@@ -121,7 +125,22 @@
 
       renderBestTimes();
 
-      setTimeout(()=> alert(`Felicitări! Ai rezolvat puzzle-ul în ${moves} mutări și ${formatSeconds(secondsElapsed)}.`), 100);
+      const winSound = new Audio('../sounds/puzzle/puzzle_win.mp3');
+      winSound.volume = 0.4;
+      winSound.play();
+
+      setTimeout(()=> {
+        const winModal = document.getElementById('winModal');
+        const winModalText = document.getElementById('winModalText');
+        const closeWinModal = document.getElementById('closeWinModal');
+
+        winModalText.textContent = `Ai rezolvat puzzle-ul în ${moves} mutări și ${formatSeconds(secondsElapsed)}.`;
+        winModal.style.display = 'flex';
+
+        closeWinModal.onclick = () => {
+          winModal.style.display = 'none';
+        };
+      }, 100);
     }
   }
 
@@ -134,7 +153,7 @@
     movesEl.textContent = '';
 
     movesContainer.style.display = 'none';
-    timerContainer.style.dispaly = 'none';
+    timerContainer.style.display = 'none';
 
     imgSrc = imageSelect.value;
 

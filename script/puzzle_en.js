@@ -1,4 +1,4 @@
-( () => {
+(() => {
     const puzzleEl = document.getElementById('puzzle');
     const levelSelect = document.getElementById('levelSelect');
     const imageSelect = document.getElementById('imageSelect');
@@ -15,17 +15,40 @@
     const bestMovesValueEl = document.getElementById('bestMovesValue');
     const bestTimeContainer = document.getElementById('bestTimeContainer');
 
-    let size = Numer(levelSelect.value || 3);
+    let size = Number(levelSelect.value || 3);
     let imgSrc = imageSelect.value;
     let tiles = [];
     let order = [];
     let selected = null;
+    let moves = 0;
     let timerInterval = null;
     let secondsElapsed = 0;
-    const bestTimesEl = document.getElementById('bestTimes');
+
+    let previewEl = null;
+    let previewActive = false;
+    const previewBtn = document.getElementById('previewBtn');
 
     function getStorageKey(level = size, imageIndex = imageSelect.selectedIndex) {
         return `puzzle_best_${level}_${imageIndex}`;
+    }
+
+    function formatSeconds(seconds) {
+        const m = Math.floor(seconds / 60);
+        const s = seconds % 60;
+        return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function renderBestTimes() {
+        const key = getStorageKey();
+        const prev = localStorage.getItem(key);
+        if (!prev) {
+            bestTimeContainer.style.display = 'none';
+            return;
+        }
+        const obj = JSON.parse(prev);
+        bestTimeValueEl.textContent = formatSeconds(obj.time);
+        bestMovesValueEl.textContent = obj.moves;
+        bestTimeContainer.style.display = '';
     }
 
     function createGrid(n, imageUrl) {
@@ -36,48 +59,46 @@
 
         for (let r = 0; r < n; r++) {
             for (let c = 0; c < n; c++) {
-            const idx = r * n + c;
-            const div = document.createElement('div');
-            
-            div.className = 'piece';
-            div.dataset.index = idx;
-            div.style.backgroundImage = imageUrl ? `url(${imageUrl})` : 'none';
-            if (!imageUrl) div.style.backgroundColor = '#15183a';
-            div.style.backgroundSize = `${n * 100}% ${n * 100}%`;
-            div.style.backgroundPosition = `${(c / (n - 1)) * 100}% ${(r / (n - 1)) * 100}%`;
-            
-            div.addEventListener('click', onPieceClick);
-            puzzleEl.appendChild(div);
-            tiles.push(div);
+                const idx = r * n + c;
+                const div = document.createElement('div');
+                div.className = 'piece';
+                div.dataset.index = idx;
+                div.style.backgroundImage = imageUrl ? `url(${imageUrl})` : 'none';
+                if (!imageUrl) div.style.backgroundColor = '#15183a';
+                div.style.backgroundSize = `${n * 100}% ${n * 100}%`;
+                div.style.backgroundPosition = `${(c / (n - 1)) * 100}% ${(r / (n - 1)) * 100}%`;
+                div.addEventListener('click', onPieceClick);
+                puzzleEl.appendChild(div);
+                tiles.push(div);
             }
         }
     }
 
     function shuffle() {
-        for(let i=order.length-1;i>0;i--) {
-            const j = Math.floor(Math.random()*(i+1));
+        for (let i = order.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
             [order[i], order[j]] = [order[j], order[i]];
         }
         render();
     }
 
-    function render(){
+    function render() {
         const n = size;
-        title.forEach((el, i) => {
+        tiles.forEach((el, i) => {
             const pos = order[i];
             const r = Math.floor(pos / n);
             const c = pos % n;
             el.style.order = i;
-            el.style.backgroundPosition = `${(c/(n-1))*100}% ${(r/(n-1))*100}%`;
+            el.style.backgroundPosition = `${(c / (n - 1)) * 100}% ${(r / (n - 1)) * 100}%`;
             el.dataset.current = pos;
         });
     }
 
-    function onPieceClick(e){
+    function onPieceClick(e) {
         const el = e.currentTarget;
         if (selected === null) {
             selected = el;
-            el.classList.remove('selected');
+            el.classList.add('selected');
             return;
         }
         if (selected === el) {
@@ -88,9 +109,13 @@
 
         if (!timerInterval) startTimerIfNeeded();
 
-        const i1 = Array.prototype.indexOf.call(tiles, selected);
-        const i2 = Array.prototype.indexOf.call(tiles, el);
+        const i1 = tiles.indexOf(selected);
+        const i2 = tiles.indexOf(el);
         [order[i1], order[i2]] = [order[i2], order[i1]];
+
+        const moveSound = new Audio('../sounds/puzzle/puzzle_move1.mp3');
+        moveSound.play();
+
         selected.classList.remove('selected');
         selected = null;
         moves++;
@@ -100,54 +125,65 @@
     }
 
     function checkSolved() {
-        const solved = order.every((v,i)=>v===i);
-        if(solved){
-            stopTimer();
-            
-            tiles.forEach(tile => tile.removeEventListener('click',onPieceClick));
+        const solved = order.every((v, i) => v === i);
+        if (!solved) return;
 
-            const key = getStorageKey(size, imageSelect.selectedIndex);
-            const prev = localStorage.getItem(key);
-            let prevObj = prev ? JSON.parse(prev) : null;
+        stopTimer();
+        tiles.forEach(tile => tile.removeEventListener('click', onPieceClick));
 
-            if((!prevObj || secondsElapsed < prevObj.time)) {
-                localStorage.setItem(key, JSON.stringify({
-                    time: secondsElapsed,
-                    moves: moves
-                }));
-            }
+        const key = getStorageKey();
+        const prev = localStorage.getItem(key);
+        let prevObj = prev ? JSON.parse(prev) : null;
 
-            renderBestTime();
-
-            setTimeout(()=> alert(`Congratulations! You have solved the puzzle in ${moves} moves and ${formatSeconds(secondsElapsed)}.`), 100);
+        if (!prevObj || secondsElapsed < prevObj.time) {
+            localStorage.setItem(key, JSON.stringify({
+                time: secondsElapsed,
+                moves: moves
+            }));
         }
+
+        renderBestTimes();
+
+        const winSound = new Audio('../sounds/puzzle/puzzle_win.mp3');
+        winSound.volume = 0.4;
+        winSound.play();
+
+        setTimeout(() => {
+            const winModal = document.getElementById('winModal');
+            const winModalText = document.getElementById('winModalText');
+            const closeWinModal = document.getElementById('closeWinModal');
+
+            if (!winModal || !winModalText || !closeWinModal) return;
+
+            winModalText.textContent = `Congratulations! You have solved the puzzle in ${moves} moves and ${formatSeconds(secondsElapsed)}.`;
+            winModal.style.display = 'flex';
+
+            closeWinModal.onclick = () => { winModal.style.display = 'none'; };
+        }, 100);
     }
 
-    function resetGame(){
+    function resetGame() {
         stopTimer();
         secondsElapsed = 0;
         moves = 0;
-
-        timerEl.textContent = '';
         movesEl.textContent = '';
-
+        timerEl.textContent = '';
         movesContainer.style.display = 'none';
-        timerContainer.style.dispaly = 'none';
+        timerContainer.style.display = 'none';
 
         imgSrc = imageSelect.value;
 
         preloadImage(imgSrc).then(url => {
             createGrid(size, url);
-            do { suffle(); }while(order.every((v,i) => v===i));
+            do { shuffle(); } while (order.every((v, i) => v === i));
             renderBestTimes();
-        }).catch(()=>{
+        }).catch(() => {
             createGrid(size, imgSrc);
-            do { shuffle(); } while(order.every((v,i)=>v===i));
+            do { shuffle(); } while (order.every((v, i) => v === i));
             renderBestTimes();
         });
 
         previewActive = false;
-        previewBtn.textContent = "Preview";
         if (previewEl) {
             previewEl.remove();
             previewEl = null;
@@ -155,63 +191,60 @@
     }
 
     function preloadImage(src) {
-        return new Promise((resolve, reject)=>{
+        return new Promise((resolve, reject) => {
             const img = new Image();
             img.onload = () => resolve(src);
             img.onerror = () => reject(new Error('Cannot load image!'));
             img.src = src;
-        })
+        });
     }
 
-    function startTimerIfNeeded(src){
+    function startTimerIfNeeded() {
         if (timerInterval) return;
         movesContainer.style.display = '';
-        timerContainer.style.dispaly = '';
-        timerInterval = setInterval(()=>{
+        timerContainer.style.display = '';
+        timerInterval = setInterval(() => {
             secondsElapsed++;
             updateTimerDisplay();
         }, 1000);
     }
 
-    function stopTimer(){ if(timerInterval){ clearInterval(timerInterval); timerInterval = null; } }
+    function stopTimer() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+    }
 
     function updateTimerDisplay() {
-        if (secondsElapsed <= 0) {
-            timerEl.textContent = '';
-            return;
-        }
-        const m = Math.floor(secondsElapsed / 60);
-        const s = secondsElapsed % 60;
-        timerEl.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        timerEl.textContent = secondsElapsed > 0 ? formatSeconds(secondsElapsed) : '';
     }
+
     resetBtn.addEventListener('click', resetGame);
 
-    function applyLevelImmediate(){
+    function applyLevelImmediate() {
         size = Number(levelSelect.value);
         imgSrc = imageSelect.value;
         moves = 0;
         movesEl.textContent = '';
-
         bestTimeValueEl.textContent = '';
         bestMovesValueEl.textContent = '';
-        bestTimerContainer.style.display = 'none';
-
-        movesContainer.style.dispaly = 'none';
-        timerContainer.style.dispaly = 'none';
+        bestTimeContainer.style.display = 'none';
+        movesContainer.style.display = 'none';
+        timerContainer.style.display = 'none';
+        stopTimer();
 
         preloadImage(imgSrc).then(url => {
             createGrid(size, url);
-            do { shuffle(); } while(order.every((v,i)=>v===i));
+            do { shuffle(); } while (order.every((v, i) => v === i));
             renderBestTimes();
-        }).catch(()=>{
+        }).catch(() => {
             createGrid(size, imgSrc);
-            do { shuffle(); } while(order.every((v,i)=>v===i))''
+            do { shuffle(); } while (order.every((v, i) => v === i));
+            renderBestTimes();
         });
 
-        stopTimer();
-
         previewActive = false;
-        previewBtn.textContent = 'Preview';
         if (previewEl) {
             previewEl.remove();
             previewEl = null;
@@ -219,36 +252,33 @@
     }
 
     levelSelect.addEventListener('change', applyLevelImmediate);
+    imageSelect.addEventListener('change', () => { updateLabels(); applyLevelImmediate(); });
 
-    function updateLabels(){
+    function updateLabels() {
         const li = levelSelect.options[levelSelect.selectedIndex].text;
         const ii = imageSelect.options[imageSelect.selectedIndex].text;
-        if(levelLabel) levelLabel.textContent = li;
-        if(imageLabel) imageLabel.textContent = ii;
+        if (levelLabel) levelLabel.textContent = li;
+        if (imageLabel) imageLabel.textContent = ii;
     }
     updateLabels();
-    imageSelect.addEventListener('change', ()=>{ updateLabels(); applyLevelImmediate(); });
 
     if (settingsBtn && settingsPop) {
-        settingsBtn.addEventListener('click', (e) => {
+        settingsBtn.addEventListener('click', e => {
             e.stopPropagation();
             const open = settingsPop.getAttribute('data-open') === 'true';
-            settingsPop.setAttribute('data-open', opeb ? 'false' : 'true');
+            settingsPop.setAttribute('data-open', open ? 'false' : 'true');
             settingsBtn.setAttribute('aria-expanded', open ? 'false' : 'true');
             settingsPop.setAttribute('aria-hidden', open ? 'true' : 'false');
         });
-
-        document.addEventListener('click', (e) => {
+        document.addEventListener('click', e => {
             if (settingsPop.getAttribute('data-open') !== 'true') return;
-            const clickedInside = settingsPop.contains(e.target) || settingsBtn.contains(e.target);
-            if(!clickedInside) {
+            if (!(settingsPop.contains(e.target) || settingsBtn.contains(e.target))) {
                 settingsPop.setAttribute('data-open', 'false');
                 settingsBtn.setAttribute('aria-expanded', 'false');
-                settingsPop.setattribute('aria-hidden', 'true');
+                settingsPop.setAttribute('aria-hidden', 'true');
             }
         });
-
-        document.addEventListener('keydown', (e) => {
+        document.addEventListener('keydown', e => {
             if (e.key === 'Escape' && settingsPop.getAttribute('data-open') === 'true') {
                 settingsPop.setAttribute('data-open', 'false');
                 settingsBtn.setAttribute('aria-expanded', 'false');
@@ -257,46 +287,66 @@
         });
     }
 
-    const levelGroup = document.getElementById('levelGroup')
+    const levelGroup = document.getElementById('levelGroup');
     const imageGroup = document.getElementById('imageGroup');
 
-    function setActiveButton(group, btn){
-        group.querySelectorAll('button').forEach(b=>b.classList.remove('active'));
+    function setActiveButton(group, btn) {
+        group.querySelectorAll('button').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
     }
-    if(levelGroup){
-        levelGroup.addEventListener('click', (e)=>{
-            const b = e.target.closest('button'); if(!b) return;
-            const val = b.dataset.value;
-            setActiveButton(levelGroup, b);
-            levelSelect.value = val;
-            updateLabels();
-            applyLevelImmediate();
-        });
-    }
-    if(imageGroup){
-        imageGroup.addEventListener('click', (e)=>{
-            const b = e.target.closest('button'); if(!b) return;
-            const val = b.dataset.value;
-            setActiveButton(imageGroup, b);
-            imageSelect.value = val;
-            updateLabels();
-            applyLevelImmediate();
-        });
-    }
 
-    (function init(){
+    if (levelGroup) levelGroup.addEventListener('click', e => {
+        const b = e.target.closest('button'); if (!b) return;
+        levelSelect.value = b.dataset.value;
+        setActiveButton(levelGroup, b);
+        updateLabels();
+        applyLevelImmediate();
+    });
+
+    if (imageGroup) imageGroup.addEventListener('click', e => {
+        const b = e.target.closest('button'); if (!b) return;
+        imageSelect.value = b.dataset.value;
+        setActiveButton(imageGroup, b);
+        updateLabels();
+        applyLevelImmediate();
+    });
+
+    previewBtn.addEventListener('click', () => {
+        if (previewActive) {
+            previewEl.remove();
+            previewEl = null;
+            previewActive = false;
+            previewBtn.textContent = 'Preview';
+        } else {
+            previewEl = document.createElement('div');
+            previewEl.className = 'preview-overlay';
+            previewEl.style.backgroundImage = `url(${imgSrc})`;
+            puzzleEl.appendChild(previewEl);
+            previewActive = true;
+            previewBtn.textContent = 'Hide Preview';
+            setTimeout(() => {
+                if (previewActive && previewEl) {
+                    previewEl.remove();
+                    previewEl = null;
+                    previewActive = false;
+                    previewBtn.textContent = 'Preview';
+                }
+            }, 3000);
+        }
+    });
+
+    (function init() {
         const initialSrc = imageSelect.value;
         preloadImage(initialSrc).then(url => {
             createGrid(size, url);
-            do { shuffle(); } while(order.every((v,i)=>v===i));
+            do { shuffle(); } while (order.every((v, i) => v === i));
             renderBestTimes();
-            updateTimerDisplay;
-        }).catch(()=>{
+            updateTimerDisplay();
+        }).catch(() => {
             createGrid(size, initialSrc);
-            do { shuffle(); } while(order.every((v,i)=>v===i));
+            do { shuffle(); } while (order.every((v, i) => v === i));
             renderBestTimes();
             updateTimerDisplay();
         });
-    });  
+    })();
 })();
