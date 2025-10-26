@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="utf-8">
+    <title>Puzzle</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        (function () {
+            try {
+                var lang = (localStorage.getItem('lang') || 'en').toLowerCase();
+                if (lang !== 'ro' && lang !== 'en') lang = 'en';
+                var base = new URL ('.', location.href);
+                var relativePath = lang === 'ro'
+                  ? 'puzzle_ro.html'
+                  : 'puzzle_en.html';
+                var target = new URL(relativePath, base);
+                target.search = location.search;
+                target.hash = location.hash;
+                location.replace(target.href);
+            } catch (e) {
+                var fallback = new URL('./pagini_en/puzzle_en.html', new URL('.', location.href));
+                location.replace(fallback.href);
+            }
+        })();
+    </script>
+</head>
+</html>

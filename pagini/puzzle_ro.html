@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Puzzle – GameHub</title>
+    <link rel="stylesheet" href="../style/flappy.css" />
+    <link rel="stylesheet" href="../style/langToggle.css" />
+    <link rel="stylesheet" href="../style/puzzle.css" />
+    <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
+    <meta name="description" content="Puzzle clasic – divizează o imagine și reconstruiește-o." />
+</head>
+<body>
+    <div class="wrap">
+        <div class="card">
+            <header>
+                <h1>Puzzle</h1>
+                <div>
+                    <a class="btn" href="../index.html">Înapoi</a>
+                    <button class="btn" id="previewBtn" type="button">Previzualizare</button>
+                    <button class="btn" id="resetBtn" type="button">Resetează</button>
+                    <button class="btn" id="setari" type="button">Setări</button>
+                </div>
+            </header>
+
+                <div class="content">
+                    <div id="settingsPopover" class="settings-popover" aria-hidden="true">
+                        <div class="settings-row">
+                            <span>Nivel</span>
+                            <div class="segmented" id="levelGroup">
+                                <button data-value="2">2x2</button>
+                                <button data-value="3" class="active">3×3</button>
+                                <button data-value="4">4×4</button>
+                                <button data-value="5">5×5</button>
+                            </div>
+                            <select id="levelSelect" aria-hidden="true" style="display:none">
+                                <option value="2">Ușor</option>
+                                <option value="3" selected>Normal</option>
+                                <option value="4">Greu</option>
+                                <option value="5">Incredibil</option>
+                            </select>
+                        </div>
+                        
+                        <div class="settings-row">
+                            <span>Imagine</span>
+                            <div class="segmented" id="imageGroup">
+                                <button data-value="../images/puzzle_1.jpg" class="active">1</button>
+                                <button data-value="../images/puzzle_2.jpg">2</button>
+                                <button data-value="../images/puzzle_3.jpg">3</button>
+                                <button data-value="../images/puzzle_4.jpg">4</button>
+                                <button data-value="../images/puzzle_5.jpg">5</button>
+                                <button data-value="../images/puzzle_6.jpg">6</button>
+                            </div>
+                            <select id="imageSelect" aria-hidden="true" style="display:none">
+                                <option value="../images/puzzle_1.jpg">1</option>
+                                <option value="../images/puzzle_2.jpg">2</option>
+                                <option value="../images/puzzle_3.jpg">3</option>
+                                <option value="../images/puzzle_4.jpg">4</option>
+                                <option value="../images/puzzle_5.jpg">5</option>
+                                <option value="../images/puzzle_6.jpg">6</option>
+                            </select>
+                        </div> 
+                    </div>
+
+                    <div class="puzzle-controls">
+                        <div class="stat-inline">Nivel: <span id="levelLabel" class="value">Ușor</span></div>
+                        <div class="stat-inline">Imagine: <span id="imageLabel" class="value">1</span></div>
+                        <div class="stat-inline" id="movesContainer" style="display:none;">
+                            <span>Mutări: </span><span id="moves" class="value"></span>
+                        </div>
+                        <div class="stat-inline" id="timerContainer" style="display:none;">
+                            <span>Timp: </span><span id="timer" class="value"></span>
+                        </div>
+                        <div class="stat-inline" id="bestTimeContainer" style="display:none;">
+                            Record: <strong id="bestTimeValue"></strong> și <strong id="bestMovesValue"></strong> mutări
+                        </div>
+                    </div>
+
+                <div id="puzzleWrap">
+                    <div id="puzzle" class="puzzle"></div>
+                </div>
+
+                <div class="puzzle-instructions">
+                    <p>Click pe o piesă, apoi pe alta pentru a le schimba. Obiectiv: reconstitui imaginea.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="winModal">
+        <h2>Felicitări!</h2>
+        <p id="winModalText"></p>
+        <button id="closeWinModal" class="btn">Închide</button>
+    </div>
+
+    <script src="../script/puzzle_ro.js" defer></script>
+</body>
+</html>

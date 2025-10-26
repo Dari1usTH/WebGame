@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GameHub - Portalul tău de jocuri</title>
+  <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
+  <meta name="description" content="GameHub – Joacă mini-jocuri web direct din browser." />
+  <link rel="stylesheet" href="../style/style.css" />
+  <link rel="stylesheet" href="../style/langToggle.css"/>
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo" data-i18n="logo">Welcome to <b>GameHub</b></div>
+        <nav>
+            <a data-i18n="nav.home" href="#">Acasă</a>
+            <a data-i18n="nav.games" href="#jocuri">Jocuri</a>
+            <a data-i18n="nav.about" href="#despre">Despre</a>
+            <a data-i18n="nav.contact" href="#contact">Contact</a>
+            <button class="lang-toggle" id="langToggle" aria-label="Change language" data-lang="en">
+                <span>RO</span>
+                <span>EN</span>
+                <i class="knob" aria-hidden="true"></i>
+            </button>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1><span data-i18n="hero.title1">Intră în</span> <span class="accent">lobby</span> <span data-i18n="hero.title2">și apasă</span> <span class="accent">Play</span>!</h1>
+        <p data-i18n="hero.desc">O colecție de mini-jocuri rapide, perfecte pentru pauze scurte. Fără instalare, doar distracție.</p>
+        <div class="cta">
+            <a class="btn" href="#jocuri" data-i18n="hero.btn1">Vezi jocurile</a>
+            <a class="btn" href="#despre" data-i18n="hero.btn2">Ce este GameHub?</a>
+        </div>
+        <div class="searchbar">
+            <input id="q" type="search" data-i18n-placeholder="hero.search" placeholder="Caută jocuri (ex: flappy, retro, puzzle)">
+        </div>
+    </section>
+    <main id="jocuri" class="grid">
+        <article class="card" data-tags="flappy reflexe arcade">
+            <div class="thumb">
+                <img src="images/flappy-thumb.png" alt="Flappy Square" onerror="this.style.display='none'">
+            </div>
+            <div class="body">
+                <h3 data-i18n="game1.title">Flappy Square</h3>
+                <p data-i18n="game1.desc">Controlează pătratul și evită obstacolele verzi. Cât de departe poți ajunge?</p>
+                <div class="meta" data-i18n="game1.meta">Reflexe   Singleplayer</div>
+                <a class="play" href="../pagini/flappy.html" data-i18n="game1.play">Joacă acum</a>
+            </div>
+        </article>
+
+        <article class="card" data-tags="puzzle">
+            <div class="thumb">
+                <img src="images/puzzle-thumb.jpg" alt="Puzzle" onerror="this.style.display='none'">
+            </div>
+            <div class="body">
+                <h3 data-i18n="puzzle.title">Puzzle</h3>
+                <p data-i18n="puzzle.desc">Un puzzle clasic care îți pune la încercare atenția la detaliu și gândirea strategică. Alege nivelul potrivit și urmărește-ți timpul pentru a-ți îmbunătăți performanța.</p>
+                <div class="meta" data-i18n="puzzle.meta">Logică • Atenție</div>
+                <a class="play" href="../pagini/puzzle.html" data-i18n="puzzle.play">Joacă acum</a>
+            </div>
+        </article>
+        <article class="card" data-tags="puzzle">
+            <div class="thumb">
+                <img src="images/circle-thumb.jpg" alt="Circle" onerror="this.style.display='none'">
+            </div>
+            <div class="body">
+                <h3 data-i18n="circle.title">Circle Draw</h3>
+                <p data-i18n="puzzle.desc">Incercati abilitatea de deseneaza un cerc 100% perfect!</p>
+                <div class="meta" data-i18n="circle.meta">Iscusinta • Concentrare</div>
+                <a class="play" href="../pagini/circle.html" data-i18n="circle.play">Joaca acum</a>
+            </div>
+        </article>
+
+        <article class="card" data-tags="soon in curand puzzle">
+            <div class="thumb"></div>
+            <div class="body">
+                <h3 data-i18n="game2.title">Un nou joc</h3>
+                <p data-i18n="game2.desc">Rămâi pe aproape – adăugăm curând conținut fresh.</p>
+                <div class="meta" data-i18n="game2.meta">În curând</div>
+                <a class="play" href="#" onclick="return false" aria-disabled="true" data-i18n="game2.play">În curând</a>
+            </div>
+        </article>
+    </main>
+
+    <section id="despre" class="grid" style="padding-top:0">
+        <article class="card" style="grid-column: 1/-1">
+            <div class="body">
+                <h3 data-i18n="about.title">Despre GameHub</h3>
+                <p data-i18n="about.desc">GameHub este un portal simplu pentru mini-jocuri web. Structurat pe pagini separate, fiecare joc rulează în sandbox-ul lui.</p>
+                <div class="meta" data-i18n="about.tip">Sfat: adaugă jocuri noi duplicând un card și setând linkul spre pagina jocului.</div>
+            </div>
+        </article>
+    </section>
+
+    <section id="despre" class="grid" style="padding-top:0">
+        <article class="card" style="grid-column: 1/-1">
+            <div class="body">
+                <h3 data-i18n="about2.title">Despre mine</h3>
+                <p data-i18n="about2.desc">Salut! Sunt Darius, un pasionat de programare și dezvoltare web. Am creat GameHub pentru a oferi o platformă simplă și accesibilă pentru mini-jocuri web. Sper să te bucuri de jocurile disponibile și să găsești ceva care să-ți placă!</p>
+                <div class="meta" data-i18n="about2.meta">Pasiune • Creativitate</div>
+            </div>
+        </article>
+    </section>
+
+    <footer id="contact">
+        <span data-i18n="footer.text">© 2025 GameHub • Made by Darius • Mail:</span> <a href="mailto:gamehub@gmail.com">gamehub@gmail.com</a>
+    </footer>
+
+    <script src="../script/i18n.js" defer></script>
+    <script src="../script/langToggle.js" defer></script>
+    <script src="../script/script.js" defer></script>
+</body>
+</html>

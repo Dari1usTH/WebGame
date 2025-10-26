@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perfect Circle – mini joc web</title>
+  <link rel="stylesheet" href="../style/flappy.css" />
+  <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <header>
+        <h1>Perfect Circle</h1>
+        <div>
+          <a class="btn" href="../index.html">Înapoi</a>
+          <button class="btn" id="restart" type="button">Reîncepe</button>
+          <button class="btn" id="setari" type="button">Setari</button>
+        </div>
+      </header>
+
+      <div id="settingsPopover" class="settings-popover" aria-hidden="true">
+        <div class="settings-row">
+          <label for="penColorBtn">Culoare pen</label>
+          <button class="color-btn" id="penColorBtn" type="button">
+            <span class="swatch" id="penSwatch"></span>
+            <span class="label">Color</span>
+          </button>
+        </div>
+        <div class="settings-row">
+          <label for="bgColorBtn">Fundal</label>
+          <button class="color-btn" id="bgColorBtn" type="button">
+            <span class="swatch" id="bgSwatch"></span>
+            <span class="label">Color</span>
+          </button>
+        </div>
+        <div class="settings-row">
+          <label for="starsColorBtn">Stele</label>
+          <button class="color-btn" id="starsColorBtn" type="button">
+            <span class="swatch" id="starsSwatch"></span>
+            <span class="label">Color</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="content">
+        <canvas id="game" width="640" height="420" aria-label="Canvas joc"></canvas>
+        <div class="hud">
+          <div class="stat">
+            Scor: <strong id="score">0</strong>% 
+            &nbsp;&nbsp;|&nbsp;&nbsp; Cel mai bun: <strong id="best">0</strong>%
+          </div>
+          <div class="stat">
+            Click pentru a începe desenul &middot; Trasează un cerc!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../script/rgb_panel.js" defer></script>
+  <script src="../script/circle.js" defer></script>
+</body>
+</html>
