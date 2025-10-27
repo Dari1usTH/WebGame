@@ -177,6 +177,10 @@ function showBoundaryWarning() {
   ctx.font = '500 18px system-ui';
   ctx.fillText('Apasă Restart pentru a încerca din nou', canvas.width / 2, canvas.height / 2 + 35);
 }
-//s
+function showBin()
+{
+  const t = "";
+  //test fucntion
+}
 restartBtn.addEventListener('click', reset);
 reset();
