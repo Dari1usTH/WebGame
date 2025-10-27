@@ -153,20 +153,17 @@ canvas.addEventListener('mouseout', e => {
 });
 
 function showResult() {
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  drawStars();
+
   ctx.fillStyle = 'rgba(0,0,0,0.6)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
+
   ctx.fillStyle = '#e6e9ff';
   ctx.font = '600 28px system-ui';
-<<<<<<< HEAD
   ctx.textAlign = 'center';
-
-  if (score <= 0) {
-    ctx.fillText('Cercul nu este închis!', canvas.width / 2, canvas.height / 2);
-  } else {
-    ctx.fillText(`Ai desenat un cerc ${score}% perfect!`, canvas.width / 2, canvas.height / 2);
-  }
-=======
-  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
 
   if (score <= 0) {
     ctx.fillText('Cercul nu este închis!', canvas.width / 2, canvas.height / 2);
@@ -176,33 +173,24 @@ function showResult() {
 }
 
 function showBoundaryWarning() {
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  drawStars();
   ctx.fillStyle = 'rgba(0,0,0,0.6)';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = '#ff6666';
   ctx.font = '600 26px system-ui';
   ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
   ctx.fillText('Nu ai voie să atingi marginea!', canvas.width / 2, canvas.height / 2);
   ctx.fillStyle = '#e6e9ff';
   ctx.font = '500 18px system-ui';
   ctx.fillText('Apasă Restart pentru a încerca din nou', canvas.width / 2, canvas.height / 2 + 35);
->>>>>>> b4f9705d5e366e6e5c8d82106465940f3a4c9dc3
 }
 
-function showBoundaryWarning() {
-  ctx.fillStyle = 'rgba(0,0,0,0.6)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#ff6666';
-  ctx.font = '600 26px system-ui';
-  ctx.textAlign = 'center';
-  ctx.fillText('Nu ai voie să atingi marginea!', canvas.width / 2, canvas.height / 2);
-  ctx.fillStyle = '#e6e9ff';
-  ctx.font = '500 18px system-ui';
-  ctx.fillText('Apasă Restart pentru a încerca din nou', canvas.width / 2, canvas.height / 2 + 35);
-}
-function showBin()
-{
-  const t = "";
-  //test fucntion
-}
 restartBtn.addEventListener('click', reset);
 reset();
+
+
+// starts movign all time
+// fix settings button
