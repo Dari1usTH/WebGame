@@ -10,7 +10,14 @@ const I18N = {
         "game2.title": "Un nou joc", "game2.desc": "Rămâi pe aproape – adăugăm curând conținut fresh.", "game2.meta": "În curând", "game2.play": "În curând",
         "about.title": "Despre GameHub", "about.desc": "GameHub este un portal simplu pentru mini-jocuri web. Structurat pe pagini separate, fiecare joc rulează în sandbox-ul lui.", "about.tip": "Sfat: adaugă jocuri noi duplicând un card și setând linkul spre pagina jocului.",
         "footer.text": "© 2025 GameHub • Made by Darius • Mail:",
-        "puzzle.title": "Puzzle","puzzle.desc": "Un puzzle clasic care îți pune la încercare atenția la detaliu și gândirea strategică. Alege nivelul potrivit și urmărește-ți timpul pentru a-ți îmbunătăți performanța.","puzzle.meta": "Logică • Atenție","puzzle.play": "Joacă acum"
+        "puzzle.title": "Puzzle","puzzle.desc": "Un puzzle clasic care îți pune la încercare atenția la detaliu și gândirea strategică. Alege nivelul potrivit și urmărește-ți timpul pentru a-ți îmbunătăți performanța.","puzzle.meta": "Logică • Atenție","puzzle.play": "Joacă acum",
+        "about2.desc" : "Salut! Sunt Darius, un pasionat de programare și dezvoltare web. Am creat GameHub pentru a oferi o platformă simplă și accesibilă pentru mini-jocuri web. Sper să te bucuri de jocurile disponibile și să găsești ceva care să-ți placă!",
+        "about2.title": "Despre Mine",
+        "about2.meta" : "Pasiune • Creativitate",
+        "circle.title" : "Circle Draw",
+        "circle.desc" : "Încearcă-ți îndemânarea de a desena un cerc perfect, 100%!",
+        "circle.meta" : "Iscusinta • Concentrare",
+        "circle.play" : "Joacă acum"
     },
     en: {
         "logo": "Welcome to <b>GameHub</b>",
@@ -23,7 +30,14 @@ const I18N = {
         "game2.title": "New Game", "game2.desc": "Stay tuned – fresh content coming soon.", "game2.meta": "Coming soon", "game2.play": "Coming soon",
         "about.title": "About GameHub", "about.desc": "GameHub is a simple portal for web mini-games. Each game runs in its own sandboxed page.", "about.tip": "Tip: add new games by duplicating a card and linking to the game page.",
         "footer.text": "© 2025 GameHub • Made by Darius • Mail:",
-        "puzzle.title": "Puzzle","puzzle.desc": "A classic puzzle that challenges your attention to detail and strategic thinking. Choose a difficulty level and try to improve your time.","puzzle.meta": "Logic • Focus","puzzle.play": "Play now"
+        "puzzle.title": "Puzzle","puzzle.desc": "A classic puzzle that challenges your attention to detail and strategic thinking. Choose a difficulty level and try to improve your time.","puzzle.meta": "Logic • Focus","puzzle.play": "Play now",
+        "about2.desc" : "Hi! I’m Darius, passionate about the world of informatics and technology.I created GameHub to offer a simple and accessible platform for web mini-games.I hope you enjoy the available games and find something you’ll like!",
+        "about2.title" : "About Me",
+        "anout2.meta" : "Passion • Creativity",
+        "circle.title" : "Circle Draw",
+        "circle.desc" : "Try your ability to draw a 100% perfect circle!",
+        "circle.meta" : "Skill • Focus",
+        "circle.play" : "Play Now"
     }
 };
 

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Perfect Circle – mini joc web</title>
+  <link rel="stylesheet" href="../style/flappy.css" />
+  <link rel="icon" type="image/x-icon" href="../images/favicon.ico" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <header>
+        <h1>Perfect Circle</h1>
+        <div>
+          <a class="btn" href="../index.html">Înapoi</a>
+          <button class="btn" id="restart" type="button">Reîncepe</button>
+          <button class="btn" id="setari" type="button">Setări</button>
+        </div>
+      </header>
+
+      <div id="settingsPopover" class="settings-popover" aria-hidden="true">
+        <div class="settings-row">
+          <label for="penColorBtn">Culoare creion</label>
+          <button class="color-btn" id="penColorBtn" type="button" aria-haspopup="true" aria-expanded="false">
+            <span class="swatch" id="penSwatch"></span>
+            <span class="label">Culoare</span>
+          </button>
+        </div>
+        <div class="settings-row">
+          <label for="bgColorBtn">Fundal</label>
+          <button class="color-btn" id="bgColorBtn" type="button" aria-haspopup="true" aria-expanded="false">
+            <span class="swatch" id="bgSwatch"></span>
+            <span class="label">Culoare</span>
+          </button>
+        </div>
+        <div class="settings-row">
+          <label for="starsColorBtn">Stele</label>
+          <button class="color-btn" id="starsColorBtn" type="button" aria-haspopup="true" aria-expanded="false">
+            <span class="swatch" id="starsSwatch"></span>
+            <span class="label">Culoare</span>
+          </button>
+        </div>
+
+        <div id="colorPanel" class="color-panel" aria-hidden="true">
+          <div class="cp-main">
+            <canvas id="cpSV" width="140" height="96" aria-label="Saturație/Lumină"></canvas>
+            <canvas id="cpHue" width="12" height="96" class="cp-hue" aria-label="Nuanță"></canvas>
+          </div>
+          <div class="cp-fields">
+            <label>R<input id="cpR" type="number" min="0" max="255"></label>
+            <label>G<input id="cpG" type="number" min="0" max="255"></label>
+            <label>B<input id="cpB" type="number" min="0" max="255"></label>
+            <label>#<input id="cpHex" type="text" maxlength="7" placeholder="#E11313"></label>
+            <button id="cpOk" class="btn small" type="button">OK</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content">
+        <canvas id="game" width="640" height="420" aria-label="Canvas joc"></canvas>
+        <div class="hud">
+          <div class="stat">
+            Scor: <strong id="score">0</strong>% 
+            &nbsp;&nbsp;|&nbsp;&nbsp; Cel mai bun: <strong id="best">0</strong>%
+          </div>
+          <div class="stat">
+            Click pentru a începe desenul &middot; Trasează un cerc!
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../script/rgb_panel.js" defer></script>
+  <script src="../script/circle_ro.js" defer></script>
+</body>
+</html>
