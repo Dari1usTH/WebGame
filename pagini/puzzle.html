@@ -10,15 +10,12 @@
         var lang = (localStorage.getItem('lang') || 'en').toLowerCase();
         if (lang !== 'ro' && lang !== 'en') lang = 'en';
         var relativePath = lang === 'ro'
-          ? 'puzzle_ro.html'
-          : 'puzzle_en.html';
-        var base = new URL('.', location.href);
-        var target = new URL(relativePath, base);
-        target.search = location.search;
-        target.hash = location.hash;
-        location.replace(target.href);
+          ? '/WebGame/pagini/puzzle_ro.html'
+          : '/WebGame/pagini/puzzle_en.html';
+
+        location.replace(relativePath);
       } catch (e) {
-        location.replace('puzzle_en.html');
+        location.replace('/WebGame/pagini/puzzle_en.html');
       }
     })();
   </script>
