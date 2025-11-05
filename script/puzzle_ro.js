@@ -94,7 +94,7 @@
     const i2 = Array.prototype.indexOf.call(tiles, el);
     [order[i1], order[i2]] = [order[i2], order[i1]];
 
-    const moveSound = new Audio('sounds/puzzle/puzzle_move1.mp3');
+    const moveSound = new Audio('./sounds/puzzle/puzzle_move1.mp3');
     moveSound.play();
 
     selected.classList.remove('selected');
