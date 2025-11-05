@@ -3,15 +3,18 @@ const ctx = canvas.getContext('2d');
 const scoreEl = document.getElementById('score');
 const restartBtn = document.getElementById('restart');
 
+// === Config ===
 let penColor = localStorage.getItem('circle_pen_color') || '#7aa2ff';
-let bgColor  = localStorage.getItem('circle_bg_color') || '#0f1226';
+let bgColor = localStorage.getItem('circle_bg_color') || '#0f1226';
 let starsColor = localStorage.getItem('circle_stars_color') || '#ffffff';
 
+// === State ===
 let drawing = false;
 let points = [];
 let score = 0;
-let bestScore = parseFloat(localStorage.getItem('circle_best_score')|| '0');
+let bestScore = parseFloat(localStorage.getItem('circle_best_score') || '0');
 
+// === Stars ===
 const stars = Array.from({ length: 60 }, () => ({
   x: Math.random() * canvas.width,
   y: Math.random() * canvas.height,
@@ -23,12 +26,16 @@ function drawStars() {
   ctx.fillStyle = starsColor;
   for (const st of stars) {
     st.x -= 0.2;
-    if (st.x < -2) { st.x = canvas.width + Math.random() * 40; st.y = Math.random() * canvas.height; }
+    if (st.x < -2) {
+      st.x = canvas.width + Math.random() * 40;
+      st.y = Math.random() * canvas.height;
+    }
     ctx.fillRect(st.x, st.y, st.s, st.s);
   }
   ctx.globalAlpha = 1;
 }
 
+// === Reset ===
 function reset() {
   ctx.fillStyle = bgColor;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -36,21 +43,10 @@ function reset() {
   points = [];
   score = 0;
   scoreEl.textContent = 0;
-  if (document.getElementById('best')) {
-    document.getElementById('best').textContent = bestScore;
-  }
+  document.getElementById('best').textContent = bestScore;
 }
 
-function drawLine() {
-  if (points.length < 2) return;
-  ctx.strokeStyle = penColor;
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(points[0].x, points[0].y);
-  for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
-  ctx.stroke();
-}
-
+// === Helpers ===
 function distance(a, b) {
   return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2);
 }
@@ -73,7 +69,6 @@ function hasSelfIntersection() {
     for (let j = i + 2; j < points.length - 1; j++) {
       const b1 = points[j];
       const b2 = points[j + 1];
-      
       if (Math.abs(i - j) <= 1) continue;
       if (linesIntersect(a1, a2, b1, b2)) return true;
     }
@@ -81,77 +76,61 @@ function hasSelfIntersection() {
   return false;
 }
 
+function drawLine() {
+  if (points.length < 2) return;
+  ctx.strokeStyle = penColor;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(points[0].x, points[0].y);
+  for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
+  ctx.stroke();
+}
+
+// === Circle Evaluation ===
 function evaluateCircle() {
   if (points.length < 10) return 0;
-
   const closed = hasSelfIntersection();
-  if (!closed) return 0; 
+  if (!closed) return 0;
 
   const cx = points.reduce((s, p) => s + p.x, 0) / points.length;
   const cy = points.reduce((s, p) => s + p.y, 0) / points.length;
 
-  const radii = points.map(p => distance(p, {x: cx, y: cy}));
+  const radii = points.map(p => distance(p, { x: cx, y: cy }));
   const rAvg = radii.reduce((s, r) => s + r, 0) / radii.length;
-  const deviation = Math.sqrt(radii.reduce((s, r) => s + (r - rAvg)**2, 0) / radii.length);
+  const deviation = Math.sqrt(radii.reduce((s, r) => s + (r - rAvg) ** 2, 0) / radii.length);
 
-  const pct = Math.max(0, 100 - deviation / rAvg * 100);
-  return pct.toFixed(1);
+  return Math.max(0, 100 - deviation / rAvg * 100).toFixed(1);
 }
 
-canvas.addEventListener('mousedown', e => {
-  drawing = true;
-  points = [{x: e.offsetX, y: e.offsetY}];
-});
-canvas.addEventListener('mousemove', e => {
-  if (!drawing) return;
+// === Confetti Effect ===
+function showConfetti() {
+  const particles = Array.from({ length: 100 }, () => ({
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+    dx: (Math.random() - 0.5) * 6,
+    dy: Math.random() * -4 - 2,
+    color: `hsl(${Math.random() * 360}, 80%, 60%)`,
+    size: Math.random() * 4 + 2
+  }));
 
-  if (
-    e.offsetX <= 0 || e.offsetX >= canvas.width ||
-    e.offsetY <= 0 || e.offsetY >= canvas.height
-  ) {
-    drawing = false;
-    showBoundaryWarning();
-    return;
-  }
+  let frame = 0;
+  const animate = () => {
+    frame++;
+    if (frame > 150) return;
+    drawStars();
+    for (const p of particles) {
+      p.x += p.dx;
+      p.y += p.dy;
+      p.dy += 0.1;
+      ctx.fillStyle = p.color;
+      ctx.fillRect(p.x, p.y, p.size, p.size);
+    }
+    requestAnimationFrame(animate);
+  };
+  animate();
+}
 
-  points.push({x: e.offsetX, y: e.offsetY});
-  ctx.fillStyle = bgColor;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  drawStars();
-  drawLine();
-});
-canvas.addEventListener('mouseup', () => {
-  drawing = false;
-  score = evaluateCircle();
-  scoreEl.textContent = score;
-  if (score > bestScore) {
-    bestScore = score;
-    localStorage.setItem('circle_best_score', bestScore);
-  }
-  if (document.getElementById('best')) {
-    document.getElementById('best').textContent = bestScore;
-  }
-  showResult();
-});
-canvas.addEventListener('mouseleave', e => {
-  if (!drawing) return;
-  drawing = false;
-  showBoundaryWarning();
-});
-canvas.addEventListener('mouseout', e => {
-  if (!drawing) return;
-  const rect = canvas.getBoundingClientRect();
-  if (
-    e.clientX <= rect.left ||
-    e.clientX >= rect.right ||
-    e.clientY <= rect.top ||
-    e.clientY >= rect.bottom
-  ) {
-    drawing = false;
-    showBoundaryWarning();
-  }
-});
-
+// === UI ===
 function showResult() {
   ctx.fillStyle = bgColor;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -169,6 +148,7 @@ function showResult() {
     ctx.fillText('Cercul nu este închis!', canvas.width / 2, canvas.height / 2);
   } else {
     ctx.fillText(`Ai desenat un cerc ${score}% perfect!`, canvas.width / 2, canvas.height / 2);
+    if (score >= 80) showConfetti();
   }
 }
 
@@ -188,9 +168,63 @@ function showBoundaryWarning() {
   ctx.fillText('Apasă Restart pentru a încerca din nou', canvas.width / 2, canvas.height / 2 + 35);
 }
 
+// === Events ===
+canvas.addEventListener('mousedown', e => {
+  drawing = true;
+  points = [{ x: e.offsetX, y: e.offsetY }];
+});
+
+canvas.addEventListener('mousemove', e => {
+  if (!drawing) return;
+
+  if (
+    e.offsetX <= 0 || e.offsetX >= canvas.width ||
+    e.offsetY <= 0 || e.offsetY >= canvas.height
+  ) {
+    drawing = false;
+    showBoundaryWarning();
+    return;
+  }
+
+  points.push({ x: e.offsetX, y: e.offsetY });
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  drawStars();
+  drawLine();
+});
+
+canvas.addEventListener('mouseup', () => {
+  drawing = false;
+  score = evaluateCircle();
+  scoreEl.textContent = score;
+  if (score > bestScore) {
+    bestScore = score;
+    localStorage.setItem('circle_best_score', bestScore);
+  }
+  document.getElementById('best').textContent = bestScore;
+  showResult();
+});
+
+canvas.addEventListener('mouseleave', () => {
+  if (drawing) {
+    drawing = false;
+    showBoundaryWarning();
+  }
+});
+
+canvas.addEventListener('mouseout', e => {
+  if (!drawing) return;
+  const rect = canvas.getBoundingClientRect();
+  if (
+    e.clientX <= rect.left ||
+    e.clientX >= rect.right ||
+    e.clientY <= rect.top ||
+    e.clientY >= rect.bottom
+  ) {
+    drawing = false;
+    showBoundaryWarning();
+  }
+});
+
 restartBtn.addEventListener('click', reset);
 reset();
-
-
-// starts movign all time
-// fix settings button
