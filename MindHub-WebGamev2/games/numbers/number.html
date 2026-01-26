@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Numbers</title>
+  <link rel="stylesheet" href="../../dashboard/dash.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <nav>
+    <div class="logo">Numbers</div>
+    <ul>
+      <li><a href="../../index.html">Dashboard</a></li>
+      <li>BestScore: <span class="game-score" data-game="numbers1">0</span></li>
+    </ul>
+  </nav>
+  <div class="banner">
+    <div class="game">
+      <h1 id="level">Level 1</h1>
+      <div id="numbers"></div>
+      <div id="question"></div>
+      <div class="input-area">
+        <input type="number" id="answer">
+        <button id="submit">OK</button>
+      </div>
+      <div id="info"></div>
+      <div class="score-display">
+        <span>Current Score: </span><span id="current-score">0</span>
+        <button id="start">Start Game</button>
+        <button id="reset">Reset Game</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="run.js"></script>
+  <script src="score.js"></script>
+</body>
+</html>

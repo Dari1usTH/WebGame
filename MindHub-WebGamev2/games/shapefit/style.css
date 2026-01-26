@@ -1,0 +1,101 @@
+.game {
+  text-align: center;
+  padding: 30px;
+  background: #14162b;
+  border-radius: 12px;
+  margin: 20px;
+  width: 720px;
+  max-width: calc(100% - 40px);
+}
+
+.label {
+  color: #9a9ab8;
+  margin-bottom: 10px;
+  font-size: 16px;
+}
+
+.target-wrap, .options-wrap {
+  margin-top: 22px;
+}
+
+#target {
+  width: 220px;
+  height: 220px;
+  margin: 0 auto;
+  background: #1f2140;
+  border: 2px solid #2a2d52;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#options {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 10px;
+}
+
+.opt {
+  width: 120px;
+  height: 120px;
+  background: #1f2140;
+  border: 2px solid #2a2d52;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s;
+}
+
+.opt:hover {
+  transform: scale(1.03);
+}
+
+.opt:disabled {
+  opacity: 0.5;
+  cursor: default;
+  transform: none;
+}
+
+#info {
+  margin: 18px 0 0;
+  font-size: 20px;
+  min-height: 28px;
+  color: #9a9ab8;
+}
+
+.score-display {
+  margin-top: 26px;
+  padding: 15px;
+  background: #1f2140;
+  border-radius: 8px;
+  font-size: 18px;
+}
+
+#current-score {
+  font-size: 24px;
+  font-weight: bold;
+  color: #4a9eff;
+}
+
+#start, #reset {
+  margin-left: 16px;
+  padding: 8px 20px;
+  background: #2a2d52;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#start:hover, #reset:hover {
+  background: #3a3f6e;
+}
+
+#start.hidden {
+  display: none;
+}

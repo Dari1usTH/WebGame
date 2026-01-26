@@ -1,0 +1,125 @@
+.game {
+  text-align: center;
+
+  padding: 34px 34px 28px 34px;
+  background: linear-gradient(180deg , #14162b , #101225);
+  border-radius: 16px;
+
+  margin: 22px;
+  width: 680px;
+
+  border: 1px solid rgba(74,158,255,.12);
+  box-shadow: 0 18px 55px rgba(0,0,0,.35);
+}
+
+#lvl{
+  margin: 6px 0 14px 0;
+  font-size: 34px;
+  letter-spacing: .4px;
+}
+
+#meta{
+  display:flex;  justify-content:space-between;  align-items:center;
+
+  color:#9a9ab8;
+  margin: 10px 0 18px 0;
+
+  font-size: 16px;
+  min-height: 22px;
+
+  padding: 10px 12px;
+  border-radius: 12px;
+
+  background: rgba(31,33,64,.65);
+  border: 1px solid rgba(58,63,110,.55);
+}
+
+#cueWrap{
+  display:flex; justify-content:center;
+  margin: 14px 0 18px 0;
+}
+
+#cue{
+  width: 380px; height: 132px;
+  border-radius: 16px;
+
+  background: radial-gradient(circle at 30% 20% , rgba(74,158,255,.18) , rgba(31,33,64,.95) 55%);
+  border: 1px solid rgba(74,158,255,.18);
+
+  display:flex; align-items:center; justify-content:center;
+
+  font-size: 42px;
+  font-weight: 900;
+  letter-spacing: 1px;
+  color: white;
+
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.03) , 0 14px 40px rgba(0,0,0,.35);
+}
+
+#q{
+  font-size: 18px;
+  margin: 6px 0 12px 0;
+  color: #a8a8c6;
+  min-height: 28px;
+}
+
+#info{
+  margin: 10px 0 10px 0;
+  font-size: 16px;
+  min-height: 24px;
+  color:#9a9ab8;
+  opacity:.95;
+}
+
+.score-display {
+  margin-top: 14px;
+
+  padding: 16px 16px;
+  background: rgba(31,33,64,.75);
+  border: 1px solid rgba(58,63,110,.55);
+
+  border-radius: 14px;
+  font-size: 18px;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap: 12px;
+
+  flex-wrap:wrap;
+}
+
+#sc {
+  font-size: 26px;
+  font-weight: 900;
+  color: #4a9eff;
+
+  padding: 2px 10px;
+  border-radius: 10px;
+
+  background: rgba(74,158,255,.10);
+  border: 1px solid rgba(74,158,255,.18);
+}
+
+#start, #reset, #act {
+  padding: 10px 22px;
+
+  background: #2a2d52;
+  color: white;
+
+  border: 1px solid rgba(74,158,255,.10);
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  transition: transform .06s ease , background .15s ease , opacity .15s ease;
+}
+
+#start:hover, #reset:hover, #act:hover { background: #3a3f6e; }
+
+#start:active, #reset:active, #act:active { transform: translateY(1px); }
+
+.off{
+  opacity: .55;
+  pointer-events:none;
+}

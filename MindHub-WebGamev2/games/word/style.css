@@ -1,0 +1,155 @@
+.game {
+  text-align: center;
+  padding: 30px;
+  background: #14162b;
+  border-radius: 12px;
+  margin: 20px;
+  width: 650px;
+}
+
+#meta{
+  display:flex;  justify-content:space-between;
+  color:#9a9ab8;  margin: 10px 0 18px 0;
+  font-size: 16px;
+  min-height: 22px;
+}
+
+#q{
+  font-size: 18px;
+  margin: 14px 0 16px 0;
+  color: #9a9ab8;
+  min-height: 26px;
+}
+
+#badWrap{
+  display:flex; justify-content:center;  align-items:center;
+  gap: 12px;
+  margin: 10px 0 10px 0;
+}
+
+#badWrap .lab{
+  color:#9a9ab8;
+  font-size: 16px;
+}
+
+#bad{
+  min-width: 150px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  background: #1f2140;
+  border: 2px solid #2a2d52;
+  color: #ff6b6b;
+  font-weight: 900;
+  font-size: 20px;
+  text-transform: lowercase;
+}
+
+#pad{
+  margin: 10px auto 10px auto;
+  width: 360px;
+  height: 190px;
+  border-radius: 16px;
+  background: #1f2140;
+  border: 2px solid #2a2d52;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  user-select:none;
+  transition: 0.12s;
+}
+
+#pad:hover{
+  transform: translateY(-2px);
+  border-color:#3a3f6e;
+}
+
+#pad.off{
+  opacity: .55;
+  pointer-events:none;
+}
+
+#w{
+  font-size: 54px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: .5px;
+  min-height: 64px;
+  padding: 6px 0;
+  text-transform: lowercase;
+}
+
+#tap{
+  margin-top: 6px;
+  font-size: 14px;
+  color:#9a9ab8;
+  letter-spacing: 2px;
+}
+
+#info{
+  margin: 14px 0 6px 0;
+  font-size: 18px;
+  min-height: 24px;
+  color:#9a9ab8;
+}
+
+.score-display {
+  margin-top: 20px;
+  padding: 15px;
+  background: #1f2140;
+  border-radius: 8px;
+  font-size: 18px;
+}
+
+#sc {
+  font-size: 24px;
+  font-weight: bold;
+  color: #4a9eff;
+}
+
+#start, #reset {
+  margin-left: 20px;
+  padding: 8px 20px;
+  background: #2a2d52;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#start:hover, #reset:hover { background: #3a3f6e; }
+
+#opts{
+  margin: 14px auto 0 auto;
+  display:flex;
+  gap: 10px;
+  justify-content:center;
+  flex-wrap:wrap;
+  width: 520px;
+}
+
+.op{
+  padding: 10px 16px;
+  border-radius: 10px;
+  background: #2a2d52;
+  border: 2px solid #3a3f6e;
+  color: white;
+  font-weight: 800;
+  cursor:pointer;
+  text-transform: lowercase;
+  transition: .12s;
+}
+
+.op:hover{
+  transform: translateY(-2px);
+}
+
+.op.off{
+  opacity: .55;
+  pointer-events:none;
+}
+
+#pad.show{
+  cursor: default;
+}

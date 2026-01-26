@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Write</title>
+
+  <link rel="stylesheet" href="../../dashboard/dash.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <nav>
+    <div class="logo">Write</div>
+    <ul>
+      <li><a href="../../index.html">Dashboard</a></li>
+      <li>BestScore: <span class="game-score" data-game="word9">0</span></li>
+    </ul>
+  </nav>
+
+  <div class="banner">
+    <div class="game">
+
+      <h1 id="lvl">Level 1</h1>
+
+      <div id="meta">
+        <span id="r"> </span>
+        <span id="t"> </span>
+      </div>
+
+      <div id="badWrap">
+        <div class="lab">Forbidden</div>
+        <div id="bad">and</div>
+      </div>
+
+      <div id="q">Click the word ONLY if it is NOT the forbidden one</div>
+
+      <div id="pad">
+        <div id="w"> </div>
+        <div id="tap">CHOOSE BELOW</div>
+      </div>
+
+      <div id="opts"></div>
+
+      <div id="info"></div>
+
+      <div class="score-display">
+        <span>Score: </span><span id="sc">0</span>
+        <button id="start">Start Game</button>
+        <button id="reset">Reset</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="run.js"></script>
+  <script src="score.js"></script>
+</body>
+</html>
